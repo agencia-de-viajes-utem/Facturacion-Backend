@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Transacción</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+        }
+
+        .content {
+            text-align: center;
+            padding: 40px;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            border-radius: 15px; /* Ajusta según tu preferencia */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        /* Estilo para centrar la imagen */
+        #image-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #transaction-image-authorized,
+        #transaction-image-failed,
+        #transaction-image-anulado {
+            max-width: 15%;
+            margin: 0 auto; /* Centrar la imagen */
+        }
+
+        /* Estilo para centrar el botón */
+        button {
+            margin-top: 20px;
+            background-color: #FF5C00;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <h1 id="transaction-title">Estado de Transacción</h1>
+        
+        <!-- Contenedor de la imagen para centrarla -->
+        <div id="image-container">
+            <img src="https://storage.googleapis.com/celtic-shape-407219.appspot.com/tisw/imgs_profile/icons8-check-480.png" alt="Ticket o Imagen Autorizado" id="transaction-image-authorized">
+            <img src="https://storage.googleapis.com/celtic-shape-407219.appspot.com/tisw/imgs_profile/icons8-cancel-480.png" alt="Ticket o Imagen Failed" id="transaction-image-failed" style="display: none;">
+            <img src="https://storage.googleapis.com/celtic-shape-407219.appspot.com/tisw/imgs_profile/icons8-cancel-480.png" alt="Ticket o Imagen Anulado" id="transaction-image-anulado" style="display: none;">
+        </div>
+
+        <table>
+            <tr>
+                <th>Número de Orden</th>
+                <td>{{.NumberOrder}}</td>
+            </tr>
+            <tr>
+                <th>ID de Sesión</th>
+                <td>{{.IdSession}}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td id="transaction-status">{{.Status}}</td>
+            </tr>
+            <tr>
+                <th>Monto</th>
+                <td>{{.Amount}}</td>
+            </tr>
+            <!-- Agrega más filas según las propiedades de tu estructura LogEntry -->
+        </table>
+
+        <!-- Botón Ver Factura -->
+        <button id="verFacturaBtn" onclick="verFactura()">Ver Factura</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var transactionStatusElement = document.getElementById('transaction-status');
+            var transactionTitleElement = document.getElementById('transaction-title');
+            var authorizedImage = document.getElementById('transaction-image-authorized');
+            var failedImage = document.getElementById('transaction-image-failed');
+            var anuladoImage = document.getElementById('transaction-image-anulado');
+            var verFacturaBtn = document.getElementById('verFacturaBtn');
+
+            // Obtén el estado del pago desde tu modelo de datos
+            var estadoPago = '{{.Status}}';
+
+            // Actualiza el contenido según el estado del pago
+            if (estadoPago === 'AUTHORIZED') {
+                transactionStatusElement.textContent = 'PAGO REALIZADO CON ÉXITO';
+                transactionTitleElement.textContent = '¡Pago Autorizado!';
+            } else if (estadoPago === 'ANULADO') {
+                transactionStatusElement.textContent = 'PAGO ANULADO';
+                transactionTitleElement.textContent = '¡Pago Anulado!';
+                authorizedImage.style.display = 'none'; // Oculta la imagen específica del estado Autorizado
+                failedImage.style.display = 'block';
+                verFacturaBtn.style.display = 'none'; // Oculta el botón para ANULADO
+            } else if (estadoPago === 'FAILED') {
+                transactionStatusElement.textContent = 'PAGO CANCELADO';
+                transactionTitleElement.textContent = '¡Pago Cancelado!';
+                authorizedImage.style.display = 'none'; // Oculta la imagen específica del estado Autorizado
+                anuladoImage.style.display ='block';
+                failedImage.style.display = 'none';
+                verFacturaBtn.style.display = 'none'; // Oculta el botón para FAILED
+            }
+        });
+
+        function verFactura() {
+            // Agrega aquí la lógica para redirigir o mostrar la factura según tus necesidades
+            alert('Mostrar factura o redirigir a la página de factura');
+        }
+    </script>
+</body>
+
+</html>
